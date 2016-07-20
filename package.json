@@ -1,0 +1,31 @@
+{
+  "name": "cordova-plugin-rangle-speech",
+  "version": "1.0.0",
+  "description": "Objective-C/JavaScript cordova plugin that provives text-to-speech (TTS) and control of the voice properties.",
+  "cordova": {
+    "id": "cordova-plugin-rangle-speech",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rangle/cordova-plugin-rangle-speech.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "Douglas Riches",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rangle/cordova-plugin-rangle-speech/issues"
+  },
+  "homepage": "https://github.com/rangle/cordova-plugin-rangle-speech#readme"
+}
