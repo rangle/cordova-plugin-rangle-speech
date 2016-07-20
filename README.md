@@ -8,7 +8,7 @@ Objective-C/JavaScript cordova plugin that provives text-to-speech (TTS) and con
 First make sure you have the `cordova` CLI installed on your machine.
 
 ```bash
-sudo npm i -g cordova
+npm install -g cordova
 ```
 
 Once you have the `cordova` CLI, you can install the plugin using the `cordova plugin install` command:
