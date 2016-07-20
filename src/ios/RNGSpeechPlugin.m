@@ -30,7 +30,7 @@ SOFTWARE.
 
 
 @interface RNGSpeechPlugin() 
-  // Member variables go here.
+
   @property (strong,nonatomic) RNGSpeech *speechSession;
 
 @end
@@ -39,9 +39,7 @@ SOFTWARE.
 
 - (void)pluginInitialize
 {
-    NSLog(@"Echo plugin init.");
     self.speechSession = [[RNGSpeech alloc] init];
-    NSLog(@"post session init");
 }
 
 - (void) speek:(CDVInvokedUrlCommand*)command{
