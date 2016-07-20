@@ -15,7 +15,7 @@ Once you have the `cordova` CLI, you can install the plugin using the `cordova p
 
 ### Cordova Install via GitHub
 ```bash
-cordova plugin add https://github.com/rangle/... --save
+cordova plugin add https://github.com/rangle/cordova-plugin-rangle-speech --save
 ```
 or
 ### Cordova Install via NPM
@@ -131,7 +131,7 @@ RNGSkpeech.speek(
 ```
     The MIT License (MIT)
 
-    Copyright &copy; 2016 Rangle.io
+    Copyright © 2016 Rangle.io
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
