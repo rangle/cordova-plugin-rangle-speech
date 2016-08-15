@@ -60,7 +60,7 @@ The rate at which the utterance will be spoken.  Lower values correspond to slow
 * `volume` 
 The volume used when speaking the utterance. Allowed values are in the range from 0.0 (silent) to 1.0 (loudest). The default volume is 1.0.
 
-#### JavaScript
+#### JavaScript API
 ``` JavaScript
 //Voice Properties Object
 {
@@ -73,6 +73,17 @@ The volume used when speaking the utterance. Allowed values are in the range fro
 }
 
 ```
+
+### Plugin Example
+```JavaScript
+RNGSkpeech.speek(
+    "Dave, What are you doing Dave?", //String to speak
+    {volume:1.0, rate:1.0, voiceLocale:'eg-GB'}, //Voice properties
+    ()=>{console.log('success')}, //sucess callback
+    ()=>{console.log('failure')} //failure callback
+);
+```
+        
 
 #### Objective-C API
 
@@ -111,15 +122,7 @@ The volume used when speaking the utterance. Allowed values are in the range fro
 
 ```
 
-### Example
-```JavaScript
-RNGSkpeech.speek(
-    "Dave, What are you doing Dave?",
-    {volume:1.0, rate:1.0, voiceLocale:'eg-GB'},
-    ()=>{console.log('success')},
-    ()=>{console.log('failure')}
-);
-```
+
 ## Supported platforms
 * iOS 8.x+
 

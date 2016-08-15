@@ -2,30 +2,30 @@
 //  RNGSpeech.m
 //  SpeechSynth
 //
-/* 
-Created by Douglas Riches on 2016-07-18.
-The MIT License (MIT)
-
-Copyright (c) 2016 Rangle.io
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+/*
+ Created by Douglas Riches on 2016-07-18.
+ The MIT License (MIT)
+ 
+ Copyright (c) 2016 Rangle.io
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
 
 #import "RNGSpeech.h"
 
@@ -34,6 +34,11 @@ SOFTWARE.
 
 @property (strong,nonatomic) AVSpeechSynthesizer *speechSynthesizer;
 @property (strong,nonatomic) AVAudioSession *audioSession;
+@property (strong,nonatomic) CDVInvokedUrlCommand *command;
+@property (nonatomic) bool speaking;
+@property (strong,nonatomic) NSMutableArray *utterancesQueue;
+
+- (NSDictionary*)dequeueNextUtterance;
 
 @end
 
@@ -46,10 +51,11 @@ NSString *defaultLocale = @"en-US";
 
 - (id) init {
   if(self = [super init]){
+    self.audioSession = [AVAudioSession sharedInstance];
+    self.speaking = false;
     self.speechSynthesizer = [[AVSpeechSynthesizer alloc] init];
     self.speechSynthesizer.delegate = self;
-    
-    self.audioSession = [AVAudioSession sharedInstance];
+    self.utterancesQueue = [[NSMutableArray alloc] init];
     
     NSError * _Nullable __autoreleasing * _Nullable *error;
     
@@ -137,16 +143,26 @@ NSString *defaultLocale = @"en-US";
   return _volume;
 }
 
-- (void) speek:(NSString *)speechString{
+- (void) speek:(NSString *)speechString command:(CDVInvokedUrlCommand*)command{
   
-  AVSpeechUtterance *utterance = [RNGSpeech utteranceWithString:speechString
-                                                          voice:self.voice
-                                                          pitch:self.pitchMultiplier
-                                             postUtteranceDelay:self.postSpeechInterval
-                                              preUtteranceDelay:self.preSpeechInterval
-                                                           rate:self.rate
-                                                         volume:self.volume];
-  [self.speechSynthesizer speakUtterance:utterance];
+  if(self.speaking){
+    NSDictionary *speechObject = [NSDictionary dictionaryWithObjectsAndKeys:speechString,@"speechString", command, @"command", nil];
+    [self.utterancesQueue addObject:speechObject];
+    
+  }else{
+    AVSpeechUtterance *utterance = [RNGSpeech utteranceWithString:speechString
+                                                            voice:self.voice
+                                                            pitch:self.pitchMultiplier
+                                               postUtteranceDelay:self.postSpeechInterval
+                                                preUtteranceDelay:self.preSpeechInterval
+                                                             rate:self.rate
+                                                           volume:self.volume];
+    self.command = command;
+    self.speaking = YES;
+    [self.speechSynthesizer speakUtterance:utterance];
+  }
+  
+ 
 }
 
 + (AVSpeechUtterance *) utteranceWithString:(NSString *)speechString
@@ -168,6 +184,30 @@ NSString *defaultLocale = @"en-US";
   return utterance;
 }
 
+
+#pragma mark AVSpeechSynthesizer delegate
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer
+ didFinishSpeechUtterance:(AVSpeechUtterance *)utterance
+{
+  
+  [self.delegate didFinishSpeaking:utterance command: self.command];
+  
+  self.speaking = NO;
+  
+  if(self.utterancesQueue.count > 0){
+    NSDictionary *nextUtteranceAndCommand = self.utterancesQueue.firstObject;
+    [self.utterancesQueue removeObjectAtIndex:0];
+    [self speek:[nextUtteranceAndCommand
+                 objectForKey:@"speechString"]
+        command:[nextUtteranceAndCommand
+                 objectForKey:@"command"]];
+    
+    
+  }
+  
+  
+  
+}
 
 
 @end

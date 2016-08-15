@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-rangle-speech",
-  "version": "1.0.0",
-  "description": "Objective-C/JavaScript cordova plugin that provives text-to-speech (TTS) and control of voice properties.",
+  "version": "1.1.0",
+  "description": "Objective-C/JavaScript cordova plugin that provides text-to-speech (TTS) and control of voice properties.",
   "cordova": {
     "id": "cordova-plugin-rangle-speech",
     "platforms": [

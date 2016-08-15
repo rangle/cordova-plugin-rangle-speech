@@ -29,7 +29,7 @@ SOFTWARE.
 #import "RNGSpeech.h"
 
 
-@interface RNGSpeechPlugin() 
+@interface RNGSpeechPlugin() <RNGSpeechDelegate>
 
   @property (strong,nonatomic) RNGSpeech *speechSession;
 
@@ -40,6 +40,7 @@ SOFTWARE.
 - (void)pluginInitialize
 {
     self.speechSession = [[RNGSpeech alloc] init];
+    self.speechSession.delegate = self;
 }
 
 - (void) speek:(CDVInvokedUrlCommand*)command{
@@ -94,27 +95,19 @@ SOFTWARE.
     }];
 
     if (utteranceString != nil && [utteranceString length] > 0) {
-        [self.speechSession speek: utteranceString];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: utteranceString];
+        [self.speechSession speek: utteranceString command: command];
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
 
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+   
 
 }
-
-- (void)coolMethod:(CDVInvokedUrlCommand*)command
-{
+#pragma mark RNGSpeechDelegate
+- (void)didFinishSpeaking: (AVSpeechUtterance*)utterance command:(CDVInvokedUrlCommand*)command{
     CDVPluginResult* pluginResult = nil;
-    NSString* echo = [command.arguments objectAtIndex:0];
-
-    if (echo != nil && [echo length] > 0) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
-
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: utterance.speechString];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
