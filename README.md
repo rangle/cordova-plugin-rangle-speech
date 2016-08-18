@@ -76,7 +76,7 @@ The volume used when speaking the utterance. Allowed values are in the range fro
 
 ### Plugin Example
 ```JavaScript
-RNGSkpeech.speek(
+RNGSpeech.speek(
     "Dave, What are you doing Dave?", //String to speak
     {volume:1.0, rate:1.0, voiceLocale:'eg-GB'}, //Voice properties
     ()=>{console.log('success')}, //sucess callback
