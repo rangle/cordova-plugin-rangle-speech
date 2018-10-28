@@ -102,8 +102,8 @@ NSString *defaultLocale = @"en-US";
 
 -(void)setVoiceLocale:(NSString *)voiceLocale{
   _voiceLocale = voiceLocale;
-  if(self.voice){
-    _voice = [AVSpeechSynthesisVoice voiceWithLanguage:_voiceLocale];
+  if(self.voiceID){
+    _voice = [AVSpeechSynthesisVoice voiceWithIdentifier:self.voiceID];
   }
 }
 
