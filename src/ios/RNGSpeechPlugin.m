@@ -62,6 +62,12 @@ SOFTWARE.
             @property (nonatomic) float rate;
             @property (nonatomic) float volume;
         */
+
+        if([key isEqualToString:@"voiceID"]){
+            NSString* voiceID = value;
+            self.speechSession.voiceID = voiceID;
+        }
+
         if([key isEqualToString:@"voiceLocale"]){
             NSString* locale = value;
             self.speechSession.voiceLocale = locale;

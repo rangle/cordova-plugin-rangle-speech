@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RNGSpeech : NSObject
 
 @property (strong,nonatomic) AVSpeechSynthesisVoice *voice; //set explicit voice object
+@property (strong,nonatomic) NSString *voiceID; //Explicitly set voice
 @property (strong,nonatomic) NSString *voiceLocale; //set locale for voice only (note this will do nothing if voice is explictly set)
 @property (nonatomic) float pitchMultiplier;
 @property (nonatomic) NSTimeInterval postSpeechInterval;
